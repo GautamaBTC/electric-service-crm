@@ -79,7 +79,7 @@ OrderMaster.calculateProfitDistribution = async function(orderId) {
     
     // Получаем текущие настройки
     const settings = await Setting.getCurrentSettings();
-    const directorPercent = settings.director_percent;
+    const directorPercent = settings.director_percentage;
     const masterPercent = 100 - directorPercent;
     
     // Получаем всех мастеров, участвующих в заказе

@@ -19,6 +19,9 @@ services:
         fromDatabase:
           name: electric-service-crm-db
           property: connectionString
+      # Переменные окружения для фронтенда
+      - key: REACT_APP_API_URL
+        value: https://electric-service-crm-backend.onrender.com/api
     healthCheckPath: /
     disk:
       name: data

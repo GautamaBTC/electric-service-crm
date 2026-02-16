@@ -8,12 +8,7 @@ const Order = sequelize.define('Order', {
     primaryKey: true,
     autoIncrement: true
   },
-  date_created: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
-  },
-  vehicle_name: {
+  client_name: {
     type: DataTypes.STRING(100),
     allowNull: false,
     validate: {
@@ -21,15 +16,7 @@ const Order = sequelize.define('Order', {
       len: [1, 100]
     }
   },
-  plate_number: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [1, 20]
-    }
-  },
-  owner_phone: {
+  client_phone: {
     type: DataTypes.STRING(20),
     allowNull: false,
     validate: {
@@ -37,12 +24,40 @@ const Order = sequelize.define('Order', {
       is: /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/i
     }
   },
-  status: {
-    type: DataTypes.ENUM(config.orderStatuses.IN_PROGRESS, config.orderStatuses.COMPLETED),
+  car_model: {
+    type: DataTypes.STRING(100),
     allowNull: false,
-    defaultValue: config.orderStatuses.IN_PROGRESS,
     validate: {
-      isIn: [[config.orderStatuses.IN_PROGRESS, config.orderStatuses.COMPLETED]]
+      notEmpty: true,
+      len: [1, 100]
+    }
+  },
+  car_number: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [1, 20]
+    }
+  },
+  car_year: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    validate: {
+      min: 1900,
+      max: new Date().getFullYear() + 1
+    }
+  },
+  problem_description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.ENUM('pending', 'in_progress', 'completed', 'cancelled'),
+    allowNull: false,
+    defaultValue: 'pending',
+    validate: {
+      isIn: [['pending', 'in_progress', 'completed', 'cancelled']]
     }
   },
   payment_method: {
@@ -67,13 +82,17 @@ const Order = sequelize.define('Order', {
       isIn: [config.banks]
     }
   },
-  total_sum: {
+  total_amount: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
     defaultValue: 0.00,
     validate: {
       min: 0
     }
+  },
+  completed_at: {
+    type: DataTypes.DATE,
+    allowNull: true
   },
   created_by: {
     type: DataTypes.INTEGER,
@@ -114,14 +133,14 @@ Order.prototype.calculateTotalSum = async function() {
     });
     
     // Рассчитываем общую сумму
-    const worksSum = works.reduce((sum, work) => sum + parseFloat(work.amount), 0);
-    const materialsSum = materials.reduce((sum, material) => sum + parseFloat(material.amount), 0);
-    const partsSum = parts.reduce((sum, part) => sum + parseFloat(part.amount), 0);
+    const worksSum = works.reduce((sum, work) => sum + parseFloat(work.price), 0);
+    const materialsSum = materials.reduce((sum, material) => sum + (parseFloat(material.price) * parseFloat(material.quantity)), 0);
+    const partsSum = parts.reduce((sum, part) => sum + (parseFloat(part.price) * parseFloat(part.quantity)), 0);
     
     const totalSum = worksSum + materialsSum + partsSum;
     
     // Обновляем общую сумму в заказе
-    this.total_sum = totalSum;
+    this.total_amount = totalSum;
     await this.save();
     
     return totalSum;

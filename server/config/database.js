@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '../.env' });
 const { Sequelize } = require('sequelize');
 const path = require('path');
 
@@ -51,10 +52,6 @@ const testConnection = async () => {
   }
 };
 
-// Импорт моделей
-const models = require('../models');
-const { Master, Order, OrderWork, OrderMaterial, OrderPart, OrderMaster, Setting, Bonus } = models;
-
 // Определение связей между моделями
 const defineRelations = (models) => {
   const { Master, Order, OrderWork, OrderMaterial, OrderPart, OrderMaster, Bonus } = models;
@@ -92,6 +89,10 @@ const defineRelations = (models) => {
   // Master имеет много Bonus
   Master.hasMany(Bonus, { foreignKey: 'master_id', as: 'bonuses' });
   Bonus.belongsTo(Master, { foreignKey: 'master_id', as: 'master' });
+  
+  // Order имеет много Bonus
+  Order.hasMany(Bonus, { foreignKey: 'order_id', as: 'bonuses' });
+  Bonus.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
   
   // OrderPart имеет много Bonus
   OrderPart.hasMany(Bonus, { foreignKey: 'order_part_id', as: 'partBonuses' });

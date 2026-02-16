@@ -23,6 +23,10 @@ const Master = sequelize.define('Master', {
       is: /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/i
     }
   },
+  password_hash: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   role: {
     type: DataTypes.ENUM(config.roles.ADMIN, config.roles.DIRECTOR, config.roles.MASTER),
     allowNull: false,
@@ -40,7 +44,10 @@ const Master = sequelize.define('Master', {
   tableName: 'masters',
   timestamps: true,
   paranoid: true, // Включение мягкого удаления (deletedAt)
-  underscored: true // Использование snake_case вместо camelCase
+  underscored: true, // Использование snake_case вместо camelCase
+  defaultScope: {
+    attributes: { exclude: ['password_hash'] }
+  }
 });
 
 // Методы класса

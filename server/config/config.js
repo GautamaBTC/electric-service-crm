@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '../.env' });
 const path = require('path');
 
 // Конфигурация приложения

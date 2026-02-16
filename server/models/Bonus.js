@@ -16,6 +16,14 @@ const Bonus = sequelize.define('Bonus', {
       key: 'id'
     }
   },
+  order_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'orders',
+      key: 'id'
+    }
+  },
   order_part_id: {
     type: DataTypes.INTEGER,
     allowNull: true,
@@ -40,6 +48,20 @@ const Bonus = sequelize.define('Bonus', {
       min: 0
     }
   },
+  percentage: {
+    type: DataTypes.DECIMAL(5, 2),
+    allowNull: false,
+    defaultValue: 0.00,
+    validate: {
+      min: 0,
+      max: 100
+    }
+  },
+  date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
   description: {
     type: DataTypes.TEXT,
     allowNull: true
@@ -48,18 +70,7 @@ const Bonus = sequelize.define('Bonus', {
   tableName: 'bonuses',
   timestamps: true,
   paranoid: true, // Включение мягкого удаления (deletedAt)
-  underscored: true, // Использование snake_case вместо camelCase
-  validate: {
-    // Проверка, что указана либо запчасть, либо материал
-    eitherOrderPartOrMaterial() {
-      if (!this.order_part_id && !this.order_material_id) {
-        throw new Error('Должна быть указана либо запчасть, либо материал');
-      }
-      if (this.order_part_id && this.order_material_id) {
-        throw new Error('Может быть указана либо запчасть, либо материал, но не обе одновременно');
-      }
-    }
-  }
+  underscored: true // Использование snake_case вместо camelCase
 });
 
 // Методы класса
