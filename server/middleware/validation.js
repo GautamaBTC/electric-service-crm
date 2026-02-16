@@ -1,4 +1,4 @@
-const { validationResult } = require('express-validator');
+const { validationResult, body } = require('express-validator');
 const config = require('../config/config');
 
 // Middleware для обработки ошибок валидации
