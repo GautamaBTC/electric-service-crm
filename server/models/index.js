@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const config = require('../config/config');
-const sequelize = require('../config/database');
+const { sequelize } = require('../config/database');
 
 // Импорт всех моделей
 const Master = require('./Master');

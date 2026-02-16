@@ -17,6 +17,9 @@ const statsRoutes = require('./routes/stats');
 // Импорт middleware
 const { errorHandler } = require('./utils/errorHandler');
 
+// Импорт функций для работы с базой данных
+const { sequelize, testConnection, defineRelations, syncModels } = require('./config/database');
+
 // Создание приложения Express
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,10 +54,32 @@ app.get('/api/health', (req, res) => {
 // Обработка ошибок
 app.use(errorHandler);
 
-// Запуск сервера
-app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
-  console.log(`Откройте http://localhost:${PORT} в браузере`);
-});
+// Инициализация базы данных и запуск сервера
+const startServer = async () => {
+  try {
+    // Проверка подключения к базе данных
+    await testConnection();
+    
+    // Импорт моделей
+    const models = require('./models');
+    
+    // Определение связей между моделями
+    defineRelations(models);
+    
+    // Синхронизация моделей с базой данных
+    await syncModels();
+    
+    // Запуск сервера
+    app.listen(PORT, () => {
+      console.log(`Сервер запущен на порту ${PORT}`);
+      console.log(`Откройте http://localhost:${PORT} в браузере`);
+    });
+  } catch (error) {
+    console.error('Ошибка при запуске сервера:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 module.exports = app;

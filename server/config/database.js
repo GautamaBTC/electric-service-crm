@@ -30,17 +30,13 @@ const testConnection = async () => {
 };
 
 // Импорт моделей
-const Master = require('../models/Master');
-const Order = require('../models/Order');
-const OrderWork = require('../models/OrderWork');
-const OrderMaterial = require('../models/OrderMaterial');
-const OrderPart = require('../models/OrderPart');
-const OrderMaster = require('../models/OrderMaster');
-const Setting = require('../models/Setting');
-const Bonus = require('../models/Bonus');
+const models = require('../models');
+const { Master, Order, OrderWork, OrderMaterial, OrderPart, OrderMaster, Setting, Bonus } = models;
 
 // Определение связей между моделями
-const defineRelations = () => {
+const defineRelations = (models) => {
+  const { Master, Order, OrderWork, OrderMaterial, OrderPart, OrderMaster, Bonus } = models;
+  
   // Master имеет много Order
   Master.hasMany(Order, { foreignKey: 'created_by', as: 'createdOrders' });
   Order.belongsTo(Master, { foreignKey: 'created_by', as: 'creator' });
