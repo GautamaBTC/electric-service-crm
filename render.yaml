@@ -1,0 +1,25 @@
+# Конфигурация для развертывания на Render
+
+services:
+  - type: web
+    name: electric-service-crm
+    env: node
+    buildCommand: npm install && cd client && npm install && npm run build
+    startCommand: node server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    healthCheckPath: /
+    disk:
+      name: data
+      mountPath: /opt/render/project/data
+      sizeGB: 1
+
+databases:
+  - name: electric-service-crm-db
+    databaseName: electric_service_crm
+    user: electric_service_user
+    plan: free
+    region: frankfurt
