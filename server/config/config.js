@@ -61,4 +61,9 @@ const config = {
   }
 };
 
+// Логирование для диагностики проблемы
+console.log('Конфигурация загружена:');
+console.log('config.jwt:', config.jwt);
+console.log('config.roles:', config.roles);
+
 module.exports = config;

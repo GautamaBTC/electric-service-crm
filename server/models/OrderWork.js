@@ -39,11 +39,7 @@ const OrderWork = sequelize.define('OrderWork', {
 
 // Методы класса
 OrderWork.associate = function(models) {
-  // Работа принадлежит заказу
-  OrderWork.belongsTo(models.Order, {
-    foreignKey: 'order_id',
-    as: 'order'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Метод экземпляра для обновления общей суммы заказа после изменения работы

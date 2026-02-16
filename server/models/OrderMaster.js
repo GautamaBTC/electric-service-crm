@@ -56,16 +56,7 @@ const OrderMaster = sequelize.define('OrderMaster', {
 
 // Методы класса
 OrderMaster.associate = function(models) {
-  // Участие мастера в заказе
-  OrderMaster.belongsTo(models.Order, {
-    foreignKey: 'order_id',
-    as: 'order'
-  });
-  
-  OrderMaster.belongsTo(models.Master, {
-    foreignKey: 'master_id',
-    as: 'master'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Статический метод для расчета распределения прибыли между мастерами

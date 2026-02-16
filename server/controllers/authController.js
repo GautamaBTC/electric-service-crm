@@ -4,6 +4,14 @@ const { Master } = require('../models');
 const { AppError, catchAsync } = require('../utils/errorHandler');
 const config = require('../config/config');
 
+// Логирование для диагностики проблемы
+console.log('bcrypt загружен:', typeof bcrypt);
+console.log('jwt загружен:', typeof jwt);
+console.log('Master загружен:', typeof Master);
+console.log('AppError загружен:', typeof AppError);
+console.log('catchAsync загружен:', typeof catchAsync);
+console.log('config загружен:', typeof config);
+
 // Генерация JWT токена
 const generateToken = (id) => {
   return jwt.sign({ id }, config.jwt.secret, {

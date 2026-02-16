@@ -179,6 +179,7 @@ const checkMasterAccess = async (req, res, next) => {
 
 module.exports = {
   authenticateToken,
+  protect: authenticateToken, // Псевдоним для authenticateToken для обратной совместимости
   checkRole,
   checkOrderAccess,
   checkMasterAccess

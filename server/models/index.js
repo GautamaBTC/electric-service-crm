@@ -26,6 +26,12 @@ const models = {
   Bonus
 };
 
+// Логирование для диагностики проблемы
+console.log('Модели загружены:');
+Object.keys(models).forEach(modelName => {
+  console.log(`${modelName}:`, typeof models[modelName]);
+});
+
 // Установка связей между моделями
 Object.keys(models).forEach(modelName => {
   if (models[modelName].associate) {

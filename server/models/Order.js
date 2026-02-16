@@ -92,37 +92,7 @@ const Order = sequelize.define('Order', {
 
 // Методы класса
 Order.associate = function(models) {
-  // Заказ принадлежит мастеру (который его создал)
-  Order.belongsTo(models.Master, {
-    foreignKey: 'created_by',
-    as: 'creator'
-  });
-  
-  // Заказ имеет много работ
-  Order.hasMany(models.OrderWork, {
-    foreignKey: 'order_id',
-    as: 'works'
-  });
-  
-  // Заказ имеет много материалов
-  Order.hasMany(models.OrderMaterial, {
-    foreignKey: 'order_id',
-    as: 'materials'
-  });
-  
-  // Заказ имеет много запчастей
-  Order.hasMany(models.OrderPart, {
-    foreignKey: 'order_id',
-    as: 'parts'
-  });
-  
-  // Заказ принадлежит многим мастерам (многие-ко-многим)
-  Order.belongsToMany(models.Master, {
-    through: models.OrderMaster,
-    foreignKey: 'order_id',
-    otherKey: 'master_id',
-    as: 'masters'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Метод экземпляра для расчета общей суммы

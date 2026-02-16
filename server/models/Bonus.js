@@ -64,23 +64,7 @@ const Bonus = sequelize.define('Bonus', {
 
 // Методы класса
 Bonus.associate = function(models) {
-  // Бонус принадлежит мастеру
-  Bonus.belongsTo(models.Master, {
-    foreignKey: 'master_id',
-    as: 'master'
-  });
-  
-  // Бонус может быть связан с запчастью
-  Bonus.belongsTo(models.OrderPart, {
-    foreignKey: 'order_part_id',
-    as: 'orderPart'
-  });
-  
-  // Бонус может быть связан с материалом
-  Bonus.belongsTo(models.OrderMaterial, {
-    foreignKey: 'order_material_id',
-    as: 'orderMaterial'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Статический метод для создания бонуса за запчасть

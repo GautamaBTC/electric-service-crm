@@ -2,22 +2,44 @@ const { Sequelize } = require('sequelize');
 const path = require('path');
 
 // Создание экземпляра Sequelize
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'electric_service_crm',
-  process.env.DB_USER || 'postgres',
-  process.env.DB_PASSWORD || 'password',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432,
+let sequelize;
+
+if (process.env.DATABASE_URL) {
+  // Используем DATABASE_URL для Render
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     define: {
       timestamps: true,
       underscored: true,
       paranoid: true // Включение мягкого удаления (deletedAt)
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // Необходимо для Render
+      }
     }
-  }
-);
+  });
+} else {
+  // Используем отдельные параметры для локальной разработки
+  sequelize = new Sequelize(
+    process.env.DB_NAME || 'electric_service_crm',
+    process.env.DB_USER || 'postgres',
+    process.env.DB_PASSWORD || 'password',
+    {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 5432,
+      dialect: 'postgres',
+      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      define: {
+        timestamps: true,
+        underscored: true,
+        paranoid: true // Включение мягкого удаления (deletedAt)
+      }
+    }
+  );
+}
 
 // Проверка подключения к базе данных
 const testConnection = async () => {
@@ -72,11 +94,11 @@ const defineRelations = (models) => {
   Bonus.belongsTo(Master, { foreignKey: 'master_id', as: 'master' });
   
   // OrderPart имеет много Bonus
-  OrderPart.hasMany(Bonus, { foreignKey: 'order_part_id', as: 'bonuses' });
+  OrderPart.hasMany(Bonus, { foreignKey: 'order_part_id', as: 'partBonuses' });
   Bonus.belongsTo(OrderPart, { foreignKey: 'order_part_id', as: 'orderPart' });
   
   // OrderMaterial имеет много Bonus
-  OrderMaterial.hasMany(Bonus, { foreignKey: 'order_material_id', as: 'bonuses' });
+  OrderMaterial.hasMany(Bonus, { foreignKey: 'order_material_id', as: 'materialBonuses' });
   Bonus.belongsTo(OrderMaterial, { foreignKey: 'order_material_id', as: 'orderMaterial' });
 };
 

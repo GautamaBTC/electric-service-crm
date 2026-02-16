@@ -48,23 +48,7 @@ const OrderPart = sequelize.define('OrderPart', {
 
 // Методы класса
 OrderPart.associate = function(models) {
-  // Запчасть принадлежит заказу
-  OrderPart.belongsTo(models.Order, {
-    foreignKey: 'order_id',
-    as: 'order'
-  });
-  
-  // Запчасть может быть продана мастером
-  OrderPart.belongsTo(models.Master, {
-    foreignKey: 'seller_id',
-    as: 'seller'
-  });
-  
-  // Запчасть может иметь много бонусов
-  OrderPart.hasMany(models.Bonus, {
-    foreignKey: 'order_part_id',
-    as: 'bonuses'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Метод экземпляра для обновления общей суммы заказа после изменения запчасти

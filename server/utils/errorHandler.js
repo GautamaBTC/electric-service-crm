@@ -89,6 +89,11 @@ const catchAsync = (fn) => {
   };
 };
 
+// Логирование для диагностики проблемы
+console.log('Экспорт AppError:', typeof AppError);
+console.log('Экспорт errorHandler:', typeof errorHandler);
+console.log('Экспорт catchAsync:', typeof catchAsync);
+
 module.exports = {
   AppError,
   errorHandler,

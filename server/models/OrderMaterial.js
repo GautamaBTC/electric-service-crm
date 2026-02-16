@@ -39,17 +39,7 @@ const OrderMaterial = sequelize.define('OrderMaterial', {
 
 // Методы класса
 OrderMaterial.associate = function(models) {
-  // Материал принадлежит заказу
-  OrderMaterial.belongsTo(models.Order, {
-    foreignKey: 'order_id',
-    as: 'order'
-  });
-  
-  // Материал может иметь много бонусов
-  OrderMaterial.hasMany(models.Bonus, {
-    foreignKey: 'order_material_id',
-    as: 'bonuses'
-  });
+  // Этот метод оставлен пустым, так как все ассоциации определены в database.js
 };
 
 // Метод экземпляра для обновления общей суммы заказа после изменения материала

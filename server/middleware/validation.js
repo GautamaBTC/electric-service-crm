@@ -180,6 +180,68 @@ const validateBonus = [
     })
 ];
 
+// Валидация для регистрации пользователя
+const validateRegister = [
+  // Проверка поля full_name
+  body('full_name')
+    .notEmpty().withMessage('Полное имя обязательно для заполнения')
+    .isLength({ min: 2, max: 100 }).withMessage('Полное имя должно содержать от 2 до 100 символов'),
+  
+  // Проверка поля phone
+  body('phone')
+    .notEmpty().withMessage('Телефон обязателен для заполнения')
+    .matches(/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/i).withMessage('Неверный формат номера телефона'),
+  
+  // Проверка поля password
+  body('password')
+    .notEmpty().withMessage('Пароль обязателен для заполнения')
+    .isLength({ min: 6 }).withMessage('Пароль должен содержать минимум 6 символов'),
+  
+  // Проверка поля role
+  body('role')
+    .optional({ checkFalsy: true })
+    .isIn([config.roles.ADMIN, config.roles.DIRECTOR, config.roles.MASTER]).withMessage('Недопустимая роль')
+];
+
+// Валидация для входа пользователя
+const validateLogin = [
+  // Проверка поля phone
+  body('phone')
+    .notEmpty().withMessage('Телефон обязателен для заполнения')
+    .matches(/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/i).withMessage('Неверный формат номера телефона'),
+  
+  // Проверка поля password
+  body('password')
+    .notEmpty().withMessage('Пароль обязателен для заполнения')
+];
+
+// Валидация для обновления профиля пользователя
+const validateUpdateProfile = [
+  // Проверка поля full_name
+  body('full_name')
+    .optional({ checkFalsy: true })
+    .isLength({ min: 2, max: 100 }).withMessage('Полное имя должно содержать от 2 до 100 символов'),
+  
+  // Проверка поля phone
+  body('phone')
+    .optional({ checkFalsy: true })
+    .matches(/^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/i).withMessage('Неверный формат номера телефона'),
+  
+  // Проверка поля currentPassword (обязательное, если указано newPassword)
+  body('currentPassword')
+    .custom((value, { req }) => {
+      if (req.body.newPassword && !value) {
+        throw new Error('Текущий пароль обязателен для изменения пароля');
+      }
+      return true;
+    }),
+  
+  // Проверка поля newPassword
+  body('newPassword')
+    .optional({ checkFalsy: true })
+    .isLength({ min: 6 }).withMessage('Новый пароль должен содержать минимум 6 символов')
+];
+
 module.exports = {
   handleValidationErrors,
   validateMaster,
@@ -189,5 +251,8 @@ module.exports = {
   validateOrderPart,
   validateOrderMaster,
   validateSettings,
-  validateBonus
+  validateBonus,
+  validateRegister,
+  validateLogin,
+  validateUpdateProfile
 };
