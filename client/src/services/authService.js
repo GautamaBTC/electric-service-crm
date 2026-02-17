@@ -194,6 +194,9 @@ export const hasAnyRole = (roles) => {
   return roles.includes(userRole);
 };
 
+// Экспорт объекта api для использования в других компонентах
+export { api };
+
 // Экспорт объекта authService, содержащего все функции
 export const authService = {
   login,
