@@ -27,8 +27,14 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // Проверка аутентификации
 const AuthenticatedRoute = ({ children }) => {
-  const { data: user, isLoading } = useQuery('user', authService.getCurrentUser, {
+  const { data: user, isLoading, error } = useQuery('user', authService.getCurrentUser, {
     retry: false,
+    onSuccess: (data) => {
+      console.log('✅ AuthenticatedRoute: Пользователь успешно аутентифицирован', data);
+    },
+    onError: (error) => {
+      console.error('❌ AuthenticatedRoute: Ошибка при проверке аутентификации', error);
+    }
   });
 
   if (isLoading) {
@@ -39,6 +45,7 @@ const AuthenticatedRoute = ({ children }) => {
     );
   }
 
+  console.log('🔍 AuthenticatedRoute: Данные пользователя', user, 'Ошибка:', error);
   return user ? children : <Navigate to="/login" />;
 };
 

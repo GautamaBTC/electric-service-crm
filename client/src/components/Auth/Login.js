@@ -20,15 +20,27 @@ const Login = () => {
     setIsLoading(true);
     
     try {
+      console.log('🔐 Login: Начало входа в систему', data);
       const result = await login(data.phone, data.password);
       
+      console.log('📋 Login: Результат входа', result);
+      
       if (result.success) {
+        console.log('✅ Login: Вход успешен, перенаправление на дашборд');
+        // Проверяем, что токен сохранен в localStorage
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        console.log('🔍 Login: Токен в localStorage:', !!token);
+        console.log('🔍 Login: Пользователь в localStorage:', !!user);
+        
         // Используем replace для замены текущей страницы в истории,
         // чтобы пользователь не мог вернуться на страницу логина кнопкой "назад"
         navigate('/dashboard', { replace: true });
+      } else {
+        console.error('❌ Login: Вход неуспешен', result.message);
       }
     } catch (error) {
-      console.error('Ошибка при входе:', error);
+      console.error('❌ Login: Ошибка при входе:', error);
     } finally {
       setIsLoading(false);
     }

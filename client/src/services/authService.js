@@ -46,20 +46,29 @@ api.interceptors.response.use(
 // Функция для входа в систему
 export const login = async (phone, password) => {
   try {
+    console.log('🔐 authService.login: Отправка запроса на вход', { phone, password: '***' });
     const response = await api.post('/auth/login', { phone, password });
+    
+    console.log('📋 authService.login: Ответ сервера', response.data);
     
     if (response.data.success) {
       const { token, master } = response.data.data;
+      
+      console.log('✅ authService.login: Вход успешен, сохранение токена и пользователя');
       
       // Сохраняем токен и данные пользователя
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(master));
       
+      console.log('✅ authService.login: Токен и пользователь сохранены в localStorage');
+      
       return { success: true, data: { token, user: master } };
     }
     
+    console.log('❌ authService.login: Вход неуспешен', response.data.message);
     return { success: false, message: response.data.message };
   } catch (error) {
+    console.error('❌ authService.login: Ошибка при входе', error);
     const message = error.response?.data?.message || 'Ошибка при входе в систему';
     return { success: false, message };
   }
@@ -103,7 +112,13 @@ export const logout = async () => {
 // Функция для получения данных текущего пользователя
 export const getCurrentUser = async () => {
   try {
+    console.log('🔐 authService.getCurrentUser: Запрос данных текущего пользователя');
+    const token = localStorage.getItem('token');
+    console.log('🔍 authService.getCurrentUser: Токен в localStorage', !!token);
+    
     const response = await api.get('/auth/me');
+    
+    console.log('📋 authService.getCurrentUser: Ответ сервера', response.data);
     
     if (response.data.success) {
       const { master } = response.data.data;
@@ -111,13 +126,19 @@ export const getCurrentUser = async () => {
       // Обновляем данные пользователя в localStorage
       localStorage.setItem('user', JSON.stringify(master));
       
+      console.log('✅ authService.getCurrentUser: Данные пользователя обновлены');
+      
       return { success: true, data: { user: master } };
     }
     
+    console.log('❌ authService.getCurrentUser: Ответ не успешен', response.data.message);
     return { success: false, message: response.data.message };
   } catch (error) {
+    console.error('❌ authService.getCurrentUser: Ошибка при получении данных пользователя', error);
+    
     // Если ошибка 401, удаляем токен и данные пользователя
     if (error.response?.status === 401) {
+      console.log('🔐 authService.getCurrentUser: Удаление токена и данных пользователя из-за ошибки 401');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }
