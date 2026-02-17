@@ -194,4 +194,19 @@ export const hasAnyRole = (roles) => {
   return roles.includes(userRole);
 };
 
+// Экспорт объекта authService, содержащего все функции
+export const authService = {
+  login,
+  register,
+  logout,
+  getCurrentUser,
+  updateProfile,
+  isAuthenticated,
+  getUserFromStorage,
+  getToken,
+  getUserRole,
+  hasRole,
+  hasAnyRole,
+};
+
 export default api;
