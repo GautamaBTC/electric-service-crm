@@ -19,6 +19,15 @@ services:
         fromDatabase:
           name: electric-service-crm-db
           property: connectionString
+      # Добавляем переменные для отладки подключения к БД
+      - key: DB_HOST
+        value: localhost
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: electric_service_crm
+      - key: DB_USER
+        value: electric_service_user
       # Переменные окружения для фронтенда
       - key: REACT_APP_API_URL
         value: https://electric-service-crm-backend.onrender.com/api

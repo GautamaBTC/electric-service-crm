@@ -1,4 +1,8 @@
-require('dotenv').config({ path: '../.env' });
+// Загружаем переменные окружения из .env файла для локальной разработки
+// В продакшене (Render) переменные будут загружены из окружения
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: '../.env' });
+}
 const { Sequelize } = require('sequelize');
 const path = require('path');
 const logger = require('../utils/errorHandler');
