@@ -49,5 +49,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://electric-service-crm-backend.onrender.com"
+  "proxy": "http://localhost:3000"
 }

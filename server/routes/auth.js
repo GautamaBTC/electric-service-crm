@@ -47,4 +47,14 @@ if (typeof authController.updateProfile === 'function') {
   console.error('authController.updateProfile не является функцией:', authController.updateProfile);
 }
 
+// Эндпоинт для проверки работоспособности (health check)
+router.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Сервер аутентификации работает нормально',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 module.exports = router;

@@ -2,9 +2,9 @@
 
 services:
   - type: web
-    name: electric-service-crm
+    name: electric-service-crm-backend
     env: node
-    buildCommand: npm install && cd client && npm install && npm run build
+    buildCommand: npm run install-deps && npm run build
     startCommand: node server/index.js
     envVars:
       - key: NODE_ENV
@@ -22,7 +22,7 @@ services:
       # Переменные окружения для фронтенда
       - key: REACT_APP_API_URL
         value: https://electric-service-crm-backend.onrender.com/api
-    healthCheckPath: /
+    healthCheckPath: /api/auth/health
     disk:
       name: data
       mountPath: /opt/render/project/data
@@ -34,3 +34,5 @@ databases:
     user: electric_service_user
     plan: free
     region: frankfurt
+    type: postgres
+    version: 15

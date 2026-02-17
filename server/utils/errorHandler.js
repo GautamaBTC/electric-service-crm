@@ -89,13 +89,32 @@ const catchAsync = (fn) => {
   };
 };
 
+// Функция для логирования ошибок
+const logError = (context, error) => {
+  const timestamp = new Date().toISOString();
+  const errorMessage = `[${timestamp}] ${context}: ${error.message || error}`;
+  
+  // Вывод в консоль
+  console.error(errorMessage);
+  
+  if (error.stack) {
+    console.error(error.stack);
+  }
+  
+  // Здесь можно добавить запись в файл или отправку в систему мониторинга
+  // Например:
+  // fs.appendFileSync('logs/error.log', errorMessage + '\n' + (error.stack || '') + '\n\n');
+};
+
 // Логирование для диагностики проблемы
 console.log('Экспорт AppError:', typeof AppError);
 console.log('Экспорт errorHandler:', typeof errorHandler);
 console.log('Экспорт catchAsync:', typeof catchAsync);
+console.log('Экспорт logError:', typeof logError);
 
 module.exports = {
   AppError,
   errorHandler,
-  catchAsync
+  catchAsync,
+  logError
 };
