@@ -4,8 +4,9 @@ services:
   - type: web
     name: electric-service-crm-backend
     env: node
-    buildCommand: npm run install-deps && npm run build
+    buildCommand: cd client && npm install && npm run build
     startCommand: node server/index.js
+    runtime: node-18
     envVars:
       - key: NODE_ENV
         value: production
