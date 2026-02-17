@@ -54,10 +54,11 @@ export const AuthProvider = ({ children }) => {
       const response = await authService.login(phone, password);
       
       if (response.success) {
+        // Токен и пользователь уже сохранены в authService.login
         setUser(response.data.user);
         setIsAuthenticated(true);
         toast.success('Вход выполнен успешно');
-        return { success: true };
+        return { success: true, data: response.data };
       } else {
         toast.error(response.message);
         return { success: false, message: response.message };
@@ -152,6 +153,29 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setIsLoading(isQueryLoading);
   }, [isQueryLoading]);
+
+  // Эффект для синхронизации состояния с localStorage при загрузке приложения
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userFromStorage = localStorage.getItem('user');
+    
+    if (token && userFromStorage) {
+      try {
+        const parsedUser = JSON.parse(userFromStorage);
+        setUser(parsedUser);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Ошибка при парсинге данных пользователя:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
+    }
+  }, []);
 
   // Значения, которые будут доступны в контексте
   const value = {

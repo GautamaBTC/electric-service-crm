@@ -23,7 +23,9 @@ const Login = () => {
       const result = await login(data.phone, data.password);
       
       if (result.success) {
-        navigate('/dashboard');
+        // Используем replace для замены текущей страницы в истории,
+        // чтобы пользователь не мог вернуться на страницу логина кнопкой "назад"
+        navigate('/dashboard', { replace: true });
       }
     } catch (error) {
       console.error('Ошибка при входе:', error);
