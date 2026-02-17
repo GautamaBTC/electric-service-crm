@@ -26,7 +26,7 @@ const OrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { hasRole } = useAuth();
+  const { hasRole, user } = useAuth();
   
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -140,7 +140,7 @@ const OrderDetail = () => {
         </div>
         
         {(hasRole('director') || hasRole('admin') || 
-          (hasRole('master') && order.masters.some(master => master.id === useAuth().user?.id))) && (
+          (hasRole('master') && order.masters.some(master => master.id === user?.id))) && (
           <Link to={`/orders/${order.id}/edit`} className="btn btn-primary">
             <FiEdit /> Редактировать
           </Link>
@@ -190,7 +190,7 @@ const OrderDetail = () => {
                 <p className="text-muted">Действия</p>
                 <div className="btn-group">
                   {(hasRole('director') || hasRole('admin') || 
-                    (hasRole('master') && order.masters.some(master => master.id === useAuth().user?.id))) && (
+                    (hasRole('master') && order.masters.some(master => master.id === user?.id))) && (
                     <button 
                       className="btn btn-sm btn-outline-primary"
                       onClick={() => setShowStatusModal(true)}

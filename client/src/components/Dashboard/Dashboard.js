@@ -16,6 +16,9 @@ import {
 import { format, subDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
+// Сервисы
+import { api } from '../../services/authService';
+
 // Регистрация компонентов Chart.js
 ChartJS.register(
   CategoryScale,
@@ -27,9 +30,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-// Сервисы
-import { api } from '../../services/authService';
 
 // Функция для получения данных дашборда
 const fetchDashboardData = async () => {

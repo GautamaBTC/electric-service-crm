@@ -18,6 +18,9 @@ import { format, subDays } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import * as XLSX from 'xlsx';
 
+// Сервисы
+import { api } from '../../services/authService';
+
 // Регистрация компонентов Chart.js
 ChartJS.register(
   CategoryScale,
@@ -30,9 +33,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-// Сервисы
-import { api } from '../../services/authService';
 
 // Функция для получения общей статистики
 const fetchGeneralStats = async () => {
