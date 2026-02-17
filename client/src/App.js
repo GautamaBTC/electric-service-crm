@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ToastContainer } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 // Компоненты
 import Layout from './components/Layout/Layout';
@@ -71,7 +71,7 @@ function App() {
   return (
     <AuthProvider>
       <div className="App">
-        <ToastContainer />
+        <Toaster />
         <Routes>
           {/* Публичные маршруты */}
           <Route path="/login" element={<Login />} />
