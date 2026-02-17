@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { FiPlus, FiSearch, FiFilter, FiEdit, FiEye, FiUser, FiPhone } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';

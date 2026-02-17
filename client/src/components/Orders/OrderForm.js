@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FiSave, FiX, FiPlus, FiTrash2, FiUser, FiTool, FiPackage, FiDollarSign } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 

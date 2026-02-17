@@ -16,7 +16,7 @@
 ### 1. Клонирование репозитория
 
 ```bash
-git clone <URL-репозитория>
+git clone <https://github.com/GautamaBTC/electric-service-crm>
 cd CRM_VIPAUTO
 ```
 

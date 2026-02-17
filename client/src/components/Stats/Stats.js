@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { FiBarChart2, FiDollarSign, FiClipboard, FiUsers, FiCalendar, FiDownload, FiRefreshCw } from 'react-icons/fi';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FiSettings, FiSave, FiDollarSign, FiHome, FiPhone, FiClock } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
