@@ -31,7 +31,7 @@ services:
         value: electric_service_user
       # Переменные окружения для фронтенда
       - key: REACT_APP_API_URL
-        value: https://electric-service-crm-backend.onrender.com/api
+        value: https://electric-service-crm-backend.onrender.com
     healthCheckPath: /api/auth/health
     disk:
       name: data

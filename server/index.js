@@ -59,27 +59,6 @@ app.use('/api/stats', (req, res, next) => {
 
 console.log('Маршруты API успешно подключены');
 
-// Подключаем обработчик ошибок
-const { errorHandler } = require('./utils/errorHandler');
-
-// Обработка ошибок 404
-app.use((req, res, next) => {
-  console.error(`[${new Date().toISOString()}] 404 Not Found: ${req.method} ${req.url}`);
-  res.status(404).json({
-    success: false,
-    message: 'Маршрут не найден',
-    path: req.path
-  });
-});
-
-// Централизованный обработчик ошибок
-app.use((err, req, res, next) => {
-  console.error(`[${new Date().toISOString()}] Ошибка при обработке запроса ${req.method} ${req.url}:`, err);
-  
-  // Используем наш обработчик ошибок
-  errorHandler(err, req, res, next);
-});
-
 // Обслуживание статических файлов фронтенда в production
 if (process.env.NODE_ENV === 'production') {
   // Путь к собранным статическим файлам
@@ -284,6 +263,17 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// Подключаем обработчик ошибок (должен быть последним в цепочке middleware)
+const { errorHandler } = require('./utils/errorHandler');
+
+// Централизованный обработчик ошибок
+app.use((err, req, res, next) => {
+  console.error(`[${new Date().toISOString()}] Ошибка при обработке запроса ${req.method} ${req.url}:`, err);
+  
+  // Используем наш обработчик ошибок
+  errorHandler(err, req, res, next);
+});
 
 // Запускаем сервер
 startServer();
