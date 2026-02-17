@@ -79,69 +79,64 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError('Пожалуйста, укажите телефон и пароль', 400));
   }
   
-  try {
-    console.log('Поиск пользователя в базе данных...');
-    // Находим пользователя по телефону, включая поле password_hash
-    const master = await Master.findOne({ 
-      where: { phone },
-      attributes: { include: ['password_hash'] }
-    });
-    
-    console.log('Результат поиска пользователя:', master ? 'Пользователь найден' : 'Пользователь не найден');
-    
-    // Проверяем, что пользователь существует
-    if (!master) {
-      console.error('Ошибка: пользователь не найден в базе данных');
-      return next(new AppError('Пользователь с таким телефоном не найден', 401));
-    }
-    
-    console.log('Данные пользователя:', {
-      id: master.id,
-      full_name: master.full_name,
-      phone: master.phone,
-      role: master.role,
-      is_active: master.is_active,
-      password_hash_exists: !!master.password_hash
-    });
-    
-    // Проверяем, что пользователь активен
-    if (!master.is_active) {
-      console.error('Ошибка: пользователь неактивен');
-      return next(new AppError('Пользователь неактивен', 401));
-    }
-    
-    // Проверяем пароль
-    console.log('Проверка пароля...');
-    const isPasswordCorrect = await bcrypt.compare(password, master.password_hash);
-    console.log('Результат проверки пароля:', isPasswordCorrect ? 'Пароль верный' : 'Пароль неверный');
-    
-    if (!isPasswordCorrect) {
-      console.error('Ошибка: неверный пароль');
-      return next(new AppError('Неверный пароль', 401));
-    }
-    
-    // Удаляем пароль из ответа
-    master.password_hash = undefined;
-    
-    // Генерируем токен
-    console.log('Генерация JWT токена...');
-    const token = generateToken(master.id);
-    console.log('Токен успешно сгенерирован');
-    
-    console.log('=== ВХОД В СИСТЕМУ УСПЕШНО ЗАВЕРШЕН ===');
-    
-    res.status(200).json({
-      success: true,
-      message: 'Вход выполнен успешно',
-      data: {
-        master,
-        token
-      }
-    });
-  } catch (error) {
-    console.error('КРИТИЧЕСКАЯ ОШИБКА ПРИ ВХОДЕ В СИСТЕМУ:', error);
-    next(error);
+  console.log('Поиск пользователя в базе данных...');
+  // Находим пользователя по телефону, включая поле password_hash
+  const master = await Master.findOne({ 
+    where: { phone },
+    attributes: { include: ['password_hash'] }
+  });
+  
+  console.log('Результат поиска пользователя:', master ? 'Пользователь найден' : 'Пользователь не найден');
+  
+  // Проверяем, что пользователь существует
+  if (!master) {
+    console.error('Ошибка: пользователь не найден в базе данных');
+    return next(new AppError('Пользователь с таким телефоном не найден', 401));
   }
+  
+  console.log('Данные пользователя:', {
+    id: master.id,
+    full_name: master.full_name,
+    phone: master.phone,
+    role: master.role,
+    is_active: master.is_active,
+    password_hash_exists: !!master.password_hash
+  });
+  
+  // Проверяем, что пользователь активен
+  if (!master.is_active) {
+    console.error('Ошибка: пользователь неактивен');
+    return next(new AppError('Пользователь неактивен', 401));
+  }
+  
+  // Проверяем пароль
+  console.log('Проверка пароля...');
+  const isPasswordCorrect = await bcrypt.compare(password, master.password_hash);
+  console.log('Результат проверки пароля:', isPasswordCorrect ? 'Пароль верный' : 'Пароль неверный');
+  
+  if (!isPasswordCorrect) {
+    console.error('Ошибка: неверный пароль');
+    return next(new AppError('Неверный пароль', 401));
+  }
+  
+  // Удаляем пароль из ответа
+  master.password_hash = undefined;
+  
+  // Генерируем токен
+  console.log('Генерация JWT токена...');
+  const token = generateToken(master.id);
+  console.log('Токен успешно сгенерирован');
+  
+  console.log('=== ВХОД В СИСТЕМУ УСПЕШНО ЗАВЕРШЕН ===');
+  
+  return res.status(200).json({
+    success: true,
+    message: 'Вход выполнен успешно',
+    data: {
+      master,
+      token
+    }
+  });
 });
 
 // Получение информации о текущем пользователе

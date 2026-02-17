@@ -29,10 +29,7 @@ if (typeof authController.login === 'function') {
     console.log('Заголовки запроса:', JSON.stringify(req.headers, null, 2));
     
     // Вызываем оригинальный контроллер
-    authController.login(req, res, next).catch(error => {
-      console.error('Ошибка в контроллере входа:', error);
-      next(error);
-    });
+    authController.login(req, res, next);
   });
 } else {
   console.error('authController.login не является функцией:', authController.login);
