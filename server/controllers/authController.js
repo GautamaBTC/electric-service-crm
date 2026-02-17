@@ -64,8 +64,11 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError('Пожалуйста, укажите телефон и пароль', 400));
   }
   
-  // Находим пользователя по телефону
-  const master = await Master.findOne({ where: { phone } });
+  // Находим пользователя по телефону, включая поле password_hash
+  const master = await Master.findOne({ 
+    where: { phone },
+    attributes: { include: ['password_hash'] }
+  });
   
   // Проверяем, что пользователь существует
   if (!master) {
@@ -78,6 +81,7 @@ const login = catchAsync(async (req, res, next) => {
   }
   
   // Проверяем пароль
+  console.log('Проверка пароля:', { password: '***', passwordHash: master.password_hash ? 'exists' : 'undefined' });
   const isPasswordCorrect = await bcrypt.compare(password, master.password_hash);
   
   if (!isPasswordCorrect) {
@@ -124,8 +128,10 @@ const getMe = catchAsync(async (req, res, next) => {
 const updateProfile = catchAsync(async (req, res, next) => {
   const { full_name, phone, currentPassword, newPassword } = req.body;
   
-  // Находим пользователя
-  const master = await Master.findByPk(req.user.id);
+  // Находим пользователя, включая поле password_hash
+  const master = await Master.findByPk(req.user.id, {
+    attributes: { include: ['password_hash'] }
+  });
   
   if (!master) {
     return next(new AppError('Пользователь не найден', 404));
