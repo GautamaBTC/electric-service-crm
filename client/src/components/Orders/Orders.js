@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { FiPlus, FiSearch, FiFilter, FiEdit, FiEye, FiCalendar, FiUser, FiCar } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiFilter, FiEdit, FiEye, FiCalendar, FiUser, FiTruck } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -281,7 +281,7 @@ const Orders = () => {
             </div>
           ) : (
             <div className="text-center py-4">
-              <FiCar className="mb-3" size={48} />
+              <FiTruck className="mb-3" size={48} />
               <h4>Нет заказов</h4>
               <p className="text-muted">Заказы не найдены. Попробуйте изменить фильтры.</p>
             </div>

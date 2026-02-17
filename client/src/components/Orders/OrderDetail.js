@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { FiEdit, FiArrowLeft, FiUser, FiPhone, FiCar, FiCalendar, FiTool, FiPackage, FiDollarSign, FiClock, FiCheck, FiX } from 'react-icons/fi';
+import { FiEdit, FiArrowLeft, FiUser, FiPhone, FiTruck, FiCalendar, FiTool, FiPackage, FiDollarSign, FiClock, FiCheck, FiX } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { toast } from 'react-toastify';
@@ -238,7 +238,7 @@ const OrderDetail = () => {
                 <div className="col-sm-6">
                   <p className="text-muted">Модель</p>
                   <p>
-                    <FiCar className="mr-1" />
+                    <FiTruck className="mr-1" />
                     {order.car_model}
                   </p>
                 </div>
