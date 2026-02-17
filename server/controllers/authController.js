@@ -67,33 +67,28 @@ const register = catchAsync(async (req, res, next) => {
 });
 
 // Вход в систему
-const login = catchAsync(async (req, res, next) => {
+const login = catchAsync(async (req, res) => {
   console.log('=== НАЧАЛО ВХОДА В СИСТЕМУ ===');
-  console.log('Тело запроса:', { phone: req.body.phone, password: req.body.password ? '***' : 'undefined' });
   
   const { phone, password } = req.body;
+  console.log('Тело запроса:', { phone, password: '***' });
   
-  // Проверяем, что указаны телефон и пароль
-  if (!phone || !password) {
-    console.error('Ошибка: отсутствует телефон или пароль');
-    return next(new AppError('Пожалуйста, укажите телефон и пароль', 400));
-  }
-  
+  // Поиск пользователя
   console.log('Поиск пользователя в базе данных...');
-  // Находим пользователя по телефону, включая поле password_hash
   const master = await Master.findOne({ 
     where: { phone },
-    attributes: { include: ['password_hash'] }
+    attributes: ['id', 'full_name', 'phone', 'role', 'is_active', 'password_hash']
   });
   
-  console.log('Результат поиска пользователя:', master ? 'Пользователь найден' : 'Пользователь не найден');
-  
-  // Проверяем, что пользователь существует
   if (!master) {
-    console.error('Ошибка: пользователь не найден в базе данных');
-    return next(new AppError('Пользователь с таким телефоном не найден', 401));
+    console.log('Результат поиска пользователя: Пользователь не найден');
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Пользователь не найден' 
+    });
   }
   
+  console.log('Результат поиска пользователя: Пользователь найден');
   console.log('Данные пользователя:', {
     id: master.id,
     full_name: master.full_name,
@@ -103,38 +98,48 @@ const login = catchAsync(async (req, res, next) => {
     password_hash_exists: !!master.password_hash
   });
   
-  // Проверяем, что пользователь активен
+  // Проверка активности пользователя
   if (!master.is_active) {
-    console.error('Ошибка: пользователь неактивен');
-    return next(new AppError('Пользователь неактивен', 401));
+    console.log('Результат проверки активности: Пользователь неактивен');
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Пользователь неактивен' 
+    });
   }
   
-  // Проверяем пароль
+  // Проверка пароля
   console.log('Проверка пароля...');
-  const isPasswordCorrect = await bcrypt.compare(password, master.password_hash);
-  console.log('Результат проверки пароля:', isPasswordCorrect ? 'Пароль верный' : 'Пароль неверный');
+  const isPasswordValid = await bcrypt.compare(password, master.password_hash);
+  console.log('Результат проверки пароля:', isPasswordValid ? 'Пароль верный' : 'Пароль неверный');
   
-  if (!isPasswordCorrect) {
-    console.error('Ошибка: неверный пароль');
-    return next(new AppError('Неверный пароль', 401));
+  if (!isPasswordValid) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Неверный пароль' 
+    });
   }
   
-  // Удаляем пароль из ответа
-  master.password_hash = undefined;
-  
-  // Генерируем токен
+  // Генерация токена
   console.log('Генерация JWT токена...');
-  const token = generateToken(master.id);
-  console.log('Токен успешно сгенерирован');
+  const token = jwt.sign(
+    { id: master.id, role: master.role },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expiresIn }
+  );
   
   console.log('=== ВХОД В СИСТЕМУ УСПЕШНО ЗАВЕРШЕН ===');
   
-  return res.status(200).json({
+  // ЕДИНСТВЕННЫЙ res.json() В КОНЦЕ
+  return res.json({
     success: true,
-    message: 'Вход выполнен успешно',
     data: {
-      master,
-      token
+      token,
+      master: {
+        id: master.id,
+        full_name: master.full_name,
+        phone: master.phone,
+        role: master.role
+      }
     }
   });
 });
