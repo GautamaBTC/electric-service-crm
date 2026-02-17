@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { authService } from '../services/authService';
 
 // Создаем контекст

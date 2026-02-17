@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiSave, FiPhone, FiShield } from 'react-icons/fi';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 // Сервисы
 import { authService } from '../../services/authService';

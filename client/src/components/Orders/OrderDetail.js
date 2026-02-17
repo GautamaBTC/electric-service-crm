@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FiEdit, FiArrowLeft, FiUser, FiPhone, FiCar, FiCalendar, FiTool, FiPackage, FiDollarSign, FiClock, FiCheck, FiX } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 // Сервисы
 import { api } from '../../services/authService';
