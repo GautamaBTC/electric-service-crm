@@ -21,7 +21,19 @@ if (typeof authController.register === 'function') {
 
 // Вход в систему
 if (typeof authController.login === 'function') {
-  router.post('/login', validateLogin, authController.login);
+  router.post('/login', validateLogin, (req, res, next) => {
+    console.log('=== НАЧАЛО ОБРАБОТКИ ЗАПРОСА НА ВХОД ===');
+    console.log('Метод запроса:', req.method);
+    console.log('URL запроса:', req.url);
+    console.log('Тело запроса:', JSON.stringify(req.body, null, 2));
+    console.log('Заголовки запроса:', JSON.stringify(req.headers, null, 2));
+    
+    // Вызываем оригинальный контроллер
+    authController.login(req, res, next).catch(error => {
+      console.error('Ошибка в контроллере входа:', error);
+      next(error);
+    });
+  });
 } else {
   console.error('authController.login не является функцией:', authController.login);
 }

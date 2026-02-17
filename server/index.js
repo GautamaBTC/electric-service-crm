@@ -19,12 +19,66 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Добавляем маршруты API
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/masters', require('./routes/masters'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/settings', require('./routes/settings'));
-app.use('/api/bonuses', require('./routes/bonuses'));
-app.use('/api/stats', require('./routes/stats'));
+console.log('Подключение маршрутов API...');
+
+// Middleware для логирования запросов
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${req.ip}`);
+  next();
+});
+
+app.use('/api/auth', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/auth: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/auth'));
+
+app.use('/api/masters', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/masters: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/masters'));
+
+app.use('/api/orders', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/orders: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/orders'));
+
+app.use('/api/settings', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/settings: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/settings'));
+
+app.use('/api/bonuses', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/bonuses: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/bonuses'));
+
+app.use('/api/stats', (req, res, next) => {
+  console.log(`[${new Date().toISOString()}] Запрос к /api/stats: ${req.method} ${req.url}`);
+  next();
+}, require('./routes/stats'));
+
+console.log('Маршруты API успешно подключены');
+
+// Подключаем обработчик ошибок
+const { errorHandler } = require('./utils/errorHandler');
+
+// Обработка ошибок 404
+app.use((req, res, next) => {
+  console.error(`[${new Date().toISOString()}] 404 Not Found: ${req.method} ${req.url}`);
+  res.status(404).json({
+    success: false,
+    message: 'Маршрут не найден',
+    path: req.path
+  });
+});
+
+// Централизованный обработчик ошибок
+app.use((err, req, res, next) => {
+  console.error(`[${new Date().toISOString()}] Ошибка при обработке запроса ${req.method} ${req.url}:`, err);
+  
+  // Используем наш обработчик ошибок
+  errorHandler(err, req, res, next);
+});
 
 // Обслуживание статических файлов фронтенда в production
 if (process.env.NODE_ENV === 'production') {

@@ -3,9 +3,13 @@ const config = require('../config/config');
 
 // Middleware для обработки ошибок валидации
 const handleValidationErrors = (req, res, next) => {
+  console.log('=== НАЧАЛО ВАЛИДАЦИИ ===');
+  console.log('Тело запроса:', JSON.stringify(req.body, null, 2));
+  
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
+    console.error('Ошибки валидации:', errors.array());
     return res.status(400).json({
       success: false,
       message: 'Ошибка валидации данных',
@@ -13,6 +17,8 @@ const handleValidationErrors = (req, res, next) => {
     });
   }
   
+  console.log('Валидация прошла успешно');
+  console.log('=== КОНЕЦ ВАЛИДАЦИИ ===');
   next();
 };
 
