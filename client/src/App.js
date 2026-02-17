@@ -27,7 +27,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // Проверка аутентификации
 const AuthenticatedRoute = ({ children }) => {
-  const { data: user, isLoading, error } = useQuery('user', authService.getCurrentUser, {
+  const { data: user, isLoading, error } = useQuery(['user'], () => authService.getCurrentUser(), {
     retry: false,
     onSuccess: (data) => {
       console.log('✅ AuthenticatedRoute: Пользователь успешно аутентифицирован', data);
@@ -51,7 +51,7 @@ const AuthenticatedRoute = ({ children }) => {
 
 // Проверка роли
 const RoleRoute = ({ children, roles }) => {
-  const { data: user, isLoading } = useQuery('user', authService.getCurrentUser, {
+  const { data: user, isLoading } = useQuery(['user'], () => authService.getCurrentUser(), {
     retry: false,
   });
 
